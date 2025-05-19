@@ -1,14 +1,38 @@
 package com.example.api.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 @Entity
 public class Role {
-	@Id @GeneratedValue(strategy= GenerationType.IDENTITY)
-	private Long id;
-	private String passager;
-	private String conducteur;
-	private String worker;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String name; //  : "ROLE_PASSAGER", "ROLE_CONDUCTEUR", "ROLE_EMPLOYE"
+
+    public Role() {}
+
+    public Role(String name) {
+        this.name = name;
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
+

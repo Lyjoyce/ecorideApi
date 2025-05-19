@@ -1,6 +1,7 @@
 package com.example.api.entities;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -16,13 +17,13 @@ public class Voiture {
 	private Long id;
 	private String conducteur;
 	private String immatriculation;
-	private int date1ereimmatriculation;
+	private LocalDate date1ereimmatriculation;
 	private String marque;
 	private String modele;
 	private String couleur;
 	private String energy;
 	private List<String> options;
-	private String ecologique;
+	private boolean ecologique;
 	@ManyToOne
 	@JoinColumn(name="carpooling_id")
 	private Carpooling carpooling;	

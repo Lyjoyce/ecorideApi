@@ -34,12 +34,24 @@ build/
 src/main/resources/application.properties
 spring.application.name=ecorideApi
 server.port=8081
+spring.h2.console.enabled=false
 
-spring.datasource.username=root
-spring.datasource.password=O+pluie12.
-spring.datasource.url=jdbc:mysql://localhost:3306/ecoride
+spring.datasource.url=jdbc:mysql://mysql-kakti.alwaysdata.net:3306/kakti_ecoride?useSSL=false&serverTimezone=UTC
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.datasource.username=kakti
+spring.datasource.password=PO144anes!REINE
+
+spring.jpa.show-sql=true
+
+spring.jpa.open-in-view=false
 
 spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.datasource.hikari.maximum-pool-size=10
+
+
+# Ne jamais pousser ce fichier sur Git
+# Ignorer le fichier application-dev.properties (ne pas versionner)
+application-dev.properties
+jwt.secret=MonSuperSecretJWTPourLeDev123!

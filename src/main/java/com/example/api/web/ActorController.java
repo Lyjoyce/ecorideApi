@@ -1,10 +1,14 @@
 package com.example.api.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,14 +18,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.api.dto.LoginRequest;
 import com.example.api.entities.Actor;
 import com.example.api.repositories.ActorRepository;
+import com.example.api.security.JwtUtil;
 import com.example.api.services.ActorServiceImplementation;
 
 @RestController
 @RequestMapping("/api/v1/actor")
-@CrossOrigin
+@CrossOrigin(origins = "*") // ou "http://127.0.0.1:3000"
+
+
 public class ActorController {
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Autowired
 	private ActorRepository actorRepository;
 	@Autowired
@@ -33,6 +44,8 @@ public String testCallActor() {
 }
 	@PostMapping("/addNewActor")
 	public ResponseEntity <?>createActor(@RequestBody Actor actor) {
+		String hashedPassword = passwordEncoder.encode(actor.getPassword());
+	    actor.setPassword(hashedPassword);
 		try {
 		Actor savedActor = actorServiceImplementation.createActor(actor);
 		return ResponseEntity.ok(savedActor);
@@ -40,14 +53,45 @@ public String testCallActor() {
 		 }catch(IllegalArgumentException e) {
 			 return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());}
 		 }
-		
+	
+	@Autowired
+	private JwtUtil jwtUtil;
+
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+	    Optional<Actor> optionalActor = actorRepository.findByEmail(request.getEmail());
+
+	    if (optionalActor.isPresent()) {
+	        Actor actor = optionalActor.get();
+
+	        if (passwordEncoder.matches(request.getPassword(), actor.getPassword())) {
+	            String token = jwtUtil.generateToken(actor.getEmail());
+
+	            
+	            Map<String, Object> response = new HashMap<>();
+	            response.put("token", token);
+	            response.put("id", actor.getId());
+	            response.put("firstname", actor.getFirstname());
+	            response.put("lastname", actor.getLastname());
+	            response.put("email", actor.getEmail());
+
+	            return ResponseEntity.ok(response);
+	        }
+	    }
+
+	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	                         .body("Email ou mot de passe incorrect");
+	}
+
+
+	
 	@GetMapping("/findAll")
 	public List<Actor> getAllActors(){
 		return actorRepository.findAll();
 	}
 	@GetMapping("/findAllActif")
 	public Actor getAllActiveActors(){
-		return actorRepository.findByIsActiveTrue();
+		return actorRepository.findByActiveTrue();
 	}
 
 	
@@ -75,6 +119,6 @@ public String testCallActor() {
 					return ResponseEntity.ok(actorRepository.save(actor));
 				})
 				.orElse(ResponseEntity.notFound().build());
-	}	
+	}
 	
 }

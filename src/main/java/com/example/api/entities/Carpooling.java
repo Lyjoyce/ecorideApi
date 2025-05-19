@@ -1,5 +1,6 @@
 package com.example.api.entities;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -17,19 +18,19 @@ public class Carpooling {
 	private String carpooling;
 	private String conducteur;
 	private String immatriculation;
-	private int date1ereimmatriculation;
+	private LocalDate date1ereimmatriculation;
 	private String marque;
 	private String modele;
 	private String couleur;
-	private String energy;
-	private String ecologique;
+	private boolean energy;
+	private boolean ecologique;
 	private String preferences;
-	private String animal;
-	private String nosmoke;
+	private boolean animal;
+	private boolean nosmoke;
 	private String avis;
-	private String seatone;
-	private String seatwo;
-	private String seatthree;
+	private boolean seatone;
+	private boolean seatwo;
+	private boolean seatthree;
 	private String lieudep;
 	private String lieuarr;
 	private String jourdep;
