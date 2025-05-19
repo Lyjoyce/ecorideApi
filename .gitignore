@@ -50,7 +50,6 @@ spring.jpa.hibernate.ddl-auto=update
 
 spring.datasource.hikari.maximum-pool-size=10
 
-
 # Ne jamais pousser ce fichier sur Git
 # Ignorer le fichier application-dev.properties (ne pas versionner)
 application-dev.properties
