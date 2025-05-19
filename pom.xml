@@ -43,6 +43,7 @@
             </activation>
             <properties>
                 <spring.profiles.active>prod</spring.profiles.active>
+                <java.version>17</java.version>
             </properties>
         </profile>
     </profiles>
