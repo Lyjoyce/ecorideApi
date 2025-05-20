@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
@@ -24,30 +25,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <spring.profiles.active>dev</spring.profiles.active>
-                <java.version>17</java.version>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>prod</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <spring.profiles.active>prod</spring.profiles.active>
-                <java.version>17</java.version>
-            </properties>
-        </profile>
-    </profiles>
-
     <dependencies>
         <!-- Web -->
         <dependency>
@@ -65,21 +42,27 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <scope>runtime</scope>
+            <version>8.3.0</version>
         </dependency>
-
-        <!-- MongoDB (NoSQL) -->
+        
+        <!-- MongoDB-->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
-
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+		
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        
+        <!--Jakarta Validation API-->
+        <dependency>
+    		<groupId>jakarta.validation</groupId>
+    		<artifactId>jakarta.validation-api</artifactId>
+		</dependency>
 
         <!-- Security Crypto -->
         <dependency>
@@ -160,5 +143,24 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault> <!-- profil dev actif par défaut -->
+            </activation>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

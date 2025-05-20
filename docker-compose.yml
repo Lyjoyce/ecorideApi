@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: ecoride
+      MYSQL_USER: ecorideuser
+      MYSQL_PASSWORD: ecoridepass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+  app:
+    build: .
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
