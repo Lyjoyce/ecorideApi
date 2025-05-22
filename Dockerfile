@@ -1,24 +1,27 @@
-# Étape 1 : Build de l'application
+# Étape 1 : Compilation de l'application
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copie du pom.xml et téléchargement des dépendances
+# Copie du pom.xml et récupération des dépendances
 COPY pom.xml .
-RUN mvn dependency:go-offline
+RUN mvn dependency:go-offline -B
 
-# Copie du code source et build
+# Copie du code source complet
 COPY src ./src
-RUN mvn clean package -DskipTests
 
-# Étape 2 : Image d'exécution
+# Compilation sans les tests
+RUN mvn clean package -DskipTests -B
+
+# Étape 2 : Image de runtime
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
-# Copie du .jar depuis l'image précédente
-COPY --from=build /app/target/ecorideApi-0.0.1-SNAPSHOT.jar app.jar
+# Copie du jar généré depuis l'étape build
+# Remplace bien le nom par le bon jar exact, sinon utilise *.jar
+COPY --from=build /app/target/*.jar app.jar
 
-# Port exposé (modifie selon besoin, par défaut 8080)
-EXPOSE 8080
+# Expose le bon port (ton app écoute sur 8082)
+EXPOSE 8082
 
-# Démarrage de l'application (profil via env SPRING_PROFILES_ACTIVE)
+# Lancement de l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]

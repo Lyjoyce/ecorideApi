@@ -8,10 +8,12 @@ services:
       MYSQL_USER: ecorideuser
       MYSQL_PASSWORD: ecoridepass
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
+    networks:
+      - ecoride-network
 
   app:
     build: .
@@ -20,6 +22,23 @@ services:
     depends_on:
       - mysql
     restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecoride?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: ecorideuser
+      SPRING_DATASOURCE_PASSWORD: ecoridepass
+
+      MONGO_USER: admMong
+      MONGO_PASSWORD: MotDePasseMongo
+
+      # Forcer TLS 1.2 dans JVM pour MongoDB SSL (correction du SSLException)
+      JAVA_TOOL_OPTIONS: -Djdk.tls.client.protocols=TLSv1.2
+    networks:
+      - ecoride-network
 
 volumes:
   mysql_data:
+
+networks:
+  ecoride-network:
+    driver: bridge
+

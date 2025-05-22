@@ -1,5 +1,14 @@
+# Répertoires à ignorer
 target/
 .idea/
+.settings/
+.vscode/
+
+# Fichiers spécifiques à ignorer
 *.iml
 *.log
-.env
+*.md
+*.env
+
+# Git (inutile dans le contexte Docker)
+.git/

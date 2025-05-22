@@ -60,7 +60,7 @@ public class Actor {
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-	    name = "actor_roles",
+	    name = "actor_role",
 	    joinColumns = @JoinColumn(name = "actor_id"),
 	    inverseJoinColumns = @JoinColumn(name = "role_id")
 	)

@@ -31,8 +31,8 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private Set<Actor> actors;
     
-    @OneToMany (mappedBy= "voiture")
-    private List <Voiture> voitures;
+    @OneToMany(mappedBy = "role")
+    private List<Voiture> voitures;
 
 
     public Role(String name) {
