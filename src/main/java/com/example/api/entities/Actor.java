@@ -49,7 +49,7 @@ public class Actor {
 	private boolean seattwo;
 	private boolean seatthree;
 	
-	private int nbplace;
+	private int nbPlaceDisponible;
 	private int credits = 0;
 	@Column(nullable=false)
 	

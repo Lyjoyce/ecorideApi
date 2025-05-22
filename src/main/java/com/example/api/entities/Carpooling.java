@@ -40,10 +40,9 @@ public class Carpooling {
 	private int duree;
 	private int prix;
 	private int note;
-	private int nbplace;
+	private int nbPlaceDisponible;
 	@OneToMany(mappedBy="carpooling")
 	private List<Seatdispo> seatdispo;
-	@OneToMany(mappedBy="carpooling")
-	private List<Voiture> voitures;
+	
 	
 }

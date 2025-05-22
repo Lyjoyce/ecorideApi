@@ -13,7 +13,7 @@ public class RoleServiceImplementation implements RoleService {
 
     @Autowired
     private RoleRepository roleRepository;
-
+    
     @Override
     public Role findByName(String name) {
         Role role = roleRepository.findByName(name);
@@ -22,17 +22,26 @@ public class RoleServiceImplementation implements RoleService {
         }
         return role;
     }
-
     @Override
     public List<Role> findAll() {
         return roleRepository.findAll();
     }
-
     @Override
     public Role save(Role role) {
+        if (roleRepository.existsByName(role.getName())) {
+            throw new IllegalArgumentException("Le rôle existe déjà : " + role.getName());
+        }
         return roleRepository.save(role);
     }
-}
+
+    }
+    	 
+    	 
+    	 
+    	 
+    	
+    	
+       
 
 
 

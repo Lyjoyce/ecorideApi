@@ -56,7 +56,7 @@ public class ActorDTO {
         this.seatone = actor.isSeatone();
         this.seattwo = actor.isSeattwo();
         this.seatthree = actor.isSeatthree();
-        this.nbplace = actor.getNbplace();
+        this.nbplace = actor.getNbPlaceDisponible();
         this.credits = actor.getCredits();
         this.isActive = actor.isActive();  
         this.seatdispo = actor.getSeatdispo().stream()
