@@ -1,33 +1,18 @@
-
 services:
-  
   app:
     build: .
     ports:
       - "8082:8082"
-    depends_on:
-      - mysql
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
- #  Base de données MySQL Railway 
       SPRING_DATASOURCE_URL: jdbc:mysql://interchange.proxy.rlwy.net:56516/railw?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: ecorideuser
-      SPRING_DATASOURCE_PASSWORD: ecoridepass
-
-      #  MongoDB Atlas 
-      MONGO_USER: admMong
-      MONGO_PASSWORD: MotDePasseMongo
-
-      # Pour forcer TLS 1.2 dans la JVM (MongoDB SSL)
       JAVA_TOOL_OPTIONS: -Djdk.tls.client.protocols=TLSv1.2
 
     networks:
       - ecoride-network
 
-volumes:
-  mysql_data:
-
 networks:
   ecoride-network:
     driver: bridge
-
