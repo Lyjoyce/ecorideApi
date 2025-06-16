@@ -20,11 +20,14 @@ public class Contact {
 
     @NotBlank(message = "Le message ne peut pas être vide.")
     private String message;
+    
+    private String reponse;
+
 
 
     public Contact() {}
 
-    public Contact(String name, String email, String subject, String message) {
+    public Contact(String name, String email, String message) {
         this.name = name;
         this.email = email;
         this.message = message;
@@ -63,4 +66,9 @@ public class Contact {
     public void setMessage(String message) {
         this.message = message;
     }
+
+	public void setReponse(String reponse2) {
+		// TODO Auto-generated method stub
+		
+	}
 }

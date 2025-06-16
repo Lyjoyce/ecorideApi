@@ -1,27 +1,37 @@
-package com.example.api.config;  // ou com.example.api.init
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+package com.example.api.config;
 
 import com.example.api.entities.Role;
 import com.example.api.repositories.RoleRepository;
+import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Component
-public class DataInitializer implements CommandLineRunner {
+public class DataInitializer {
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Override
-    public void run(String... args) throws Exception {
-        List<String> roleNames = List.of("ROLE_PASSAGER", "ROLE_CONDUCTEUR", "ROLE_EMPLOYE");
+    public DataInitializer(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
 
-        for (String name : roleNames) {
-            if (!roleRepository.existsByName(name)) {
-                roleRepository.save(new Role(name));
+    @PostConstruct
+    public void init() {
+        List<String> defaultRoles = Arrays.asList(
+            "ROLE_ACTOR",
+            "ROLE_VISITOR",
+            "ROLE_PASSAGER",
+            "ROLE_CONDUCTEUR",
+            "ROLE_EMPLOYE",
+            "ROLE_ADMIN"
+        );
+
+        for (String roleName : defaultRoles) {
+            if (!roleRepository.existsByName(roleName)) {
+                roleRepository.save(new Role(roleName));
+                System.out.println("Inserted role: " + roleName);
             }
         }
     }

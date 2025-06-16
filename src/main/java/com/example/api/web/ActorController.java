@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api.dto.LoginRequest;
 import com.example.api.entities.Actor;
+import com.example.api.entities.Avis;
 import com.example.api.repositories.ActorRepository;
+import com.example.api.repositories.AvisRepository;
 import com.example.api.security.JwtUtil;
 import com.example.api.services.ActorServiceImplementation;
 
@@ -32,11 +34,11 @@ import com.example.api.services.ActorServiceImplementation;
 public class ActorController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
 	@Autowired
 	private ActorRepository actorRepository;
 	@Autowired
 	private ActorServiceImplementation actorServiceImplementation;
+	@Autowired private AvisRepository avisRepository;
 
 	@GetMapping("/test")
 public String testCallActor() {
@@ -101,6 +103,7 @@ public String testCallActor() {
 				.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
+	
 	@PutMapping("/{id}")
 	public ResponseEntity<Actor> updateActor(@PathVariable Long id, @RequestBody Actor actorDetails){
 		return actorRepository.findById(id)
@@ -110,9 +113,11 @@ public String testCallActor() {
 				})
 				.orElse(ResponseEntity.notFound().build());
 	}
+	
+	
 	//soft Delete
 	@PutMapping("/delete/{id}")
-	public ResponseEntity<Actor> deleteSoftly(@PathVariable Long id){
+	public ResponseEntity<Actor> softDeleteActor(@PathVariable Long id){
 		return actorRepository.findById(id)
 				.map(actor->{
 					actor.setActive(false);
@@ -122,3 +127,4 @@ public String testCallActor() {
 	}
 	
 }
+

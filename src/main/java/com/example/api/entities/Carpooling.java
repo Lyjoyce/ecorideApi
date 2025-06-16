@@ -12,8 +12,6 @@ import jakarta.persistence.OneToMany;
 public class Carpooling {
 	@Id @GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
-	private String pays;
-	private String region;
 	private String itinerary;
 	private String carpooling;
 	private String conducteur;
@@ -27,7 +25,6 @@ public class Carpooling {
 	private String preferences;
 	private boolean animal;
 	private boolean nosmoke;
-	private String avis;
 	private boolean seatone;
 	private boolean seatwo;
 	private boolean seatthree;
@@ -39,7 +36,6 @@ public class Carpooling {
 	private int heurearr ;
 	private int duree;
 	private int prix;
-	private int note;
 	private int nbPlaceDisponible;
 	@OneToMany(mappedBy="carpooling")
 	private List<Seatdispo> seatdispo;

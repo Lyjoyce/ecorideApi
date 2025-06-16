@@ -1,3 +1,7 @@
+
+# Ne jamais pousser ce fichier sur Git
+.env
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -50,7 +54,3 @@ spring.jpa.hibernate.ddl-auto=update
 
 spring.datasource.hikari.maximum-pool-size=10
 
-# Ne jamais pousser ce fichier sur Git
-# Ignorer le fichier application-dev.properties (ne pas versionner)
-application-dev.properties
-jwt.secret=MonSuperSecretJWTPourLeDev123!

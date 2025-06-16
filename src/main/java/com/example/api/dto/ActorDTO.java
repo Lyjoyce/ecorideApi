@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.api.entities.Actor;
+import com.example.api.entities.Avis;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,10 +19,10 @@ public class ActorDTO {
     private String firstname;
     private String lastname;
     private String email;
-    private int telephone;
+    private String telephone;
     private LocalDate birthday;
     private int note;
-    private String avis;
+    private List<Avis> avis;
     private String immatriculation;
     private LocalDate date1ereimmatriculation;
     private String marque;

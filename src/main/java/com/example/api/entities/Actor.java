@@ -5,15 +5,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.JoinColumn;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Actor {
 	@Id @GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
@@ -32,11 +34,11 @@ public class Actor {
 	private String email;
 	
 	private String password;
-	private int telephone;
-	private LocalDate birthday;
+	private String telephone;
+	@Lob
+	@Column(name = "photo")
+	private byte[] photo;
 	
-	private int note;
-	private String avis;
 	private String immatriculation;
 	private LocalDate date1ereimmatriculation;
 	private String marque;
@@ -55,6 +57,10 @@ public class Actor {
 	
 	private boolean active=true;
 	
+	@OneToMany(mappedBy = "actor", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Avis> avis;
+
+
 	@OneToMany (mappedBy= "actor")
 	private List<Seatdispo> seatdispo;
 	
@@ -65,5 +71,26 @@ public class Actor {
 	    inverseJoinColumns = @JoinColumn(name = "role_id")
 	)
 	private Set<Role> roles = new HashSet<>();
+	
+
+
+	public void setNote(int round) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int getNote() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public LocalDate getBirthday() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
+
+
+
+
