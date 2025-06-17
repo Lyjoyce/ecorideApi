@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 public class Voiture {
 	@Id @GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
-	private String conducteur;
 	private String immatriculation;
 	private LocalDate date1ereimmatriculation;
 	private String marque;
@@ -33,7 +32,18 @@ public class Voiture {
 	@ElementCollection
 	private List<String> options;
 	private boolean ecologique;
-	@ManyToOne
-	@JoinColumn(name="role_id")
-	private Role role;	
+	
+	 @ManyToOne
+	    @JoinColumn(name = "conducteur_id") // L'acteur propriétaire de cette voiture
+	    private Actor conducteur;
+
+	public void setConducteurActor(Actor conducteur2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Actor getConducteurActor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

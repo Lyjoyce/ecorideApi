@@ -7,7 +7,10 @@ import lombok.Data;
 
 @Data
 public class VoitureRequest {
-    private String conducteur;
+    private Long id;
+
+    private Long conducteurId;
+
     private String immatriculation;
     private LocalDate date1ereimmatriculation;
     private String marque;
@@ -17,5 +20,5 @@ public class VoitureRequest {
     private List<String> options;
     private boolean ecologique;
 
-    private String roleName; 
+    private String roleName;
 }

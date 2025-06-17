@@ -16,14 +16,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api.dto.LoginRequest;
 import com.example.api.entities.Actor;
+import com.example.api.entities.Role;
+import com.example.api.entities.Voiture;
 import com.example.api.repositories.ActorRepository;
 import com.example.api.repositories.AvisRepository;
 import com.example.api.security.JwtUtil;
 import com.example.api.services.ActorServiceImplementation;
+
+import java.util.Objects; // ✅ Correct
+
 
 @RestController
 @RequestMapping("/api/v1/actor")
@@ -37,7 +43,14 @@ public class ActorControllers {
 	private ActorRepository actorRepository;
 	@Autowired
 	private ActorServiceImplementation actorServiceImplementation;
-	@Autowired private AvisRepository avisRepository;
+	@Autowired 
+	private AvisRepository avisRepository; // TODO: utiliser pour gérer les avis
+	@Autowired
+	private com.example.api.repositories.VoitureRepository voitureRepository;
+	@Autowired
+	private com.example.api.repositories.RoleRepository roleRepository;
+
+
 
 	@GetMapping("/test")
 public String testCallActor() {
@@ -91,7 +104,7 @@ public String testCallActor() {
 		return actorRepository.findAll();
 	}
 	@GetMapping("/findAllActif")
-	public Actor getAllActiveActors(){
+	public List<Actor> getAllActiveActors(){
 		return actorRepository.findByActiveTrue();
 	}
 
@@ -113,7 +126,35 @@ public String testCallActor() {
 				.orElse(ResponseEntity.notFound().build());
 	}
 	
-	
+	@PutMapping("/becomeDriver/{actorId}")
+	public ResponseEntity<?> becomeDriver(@PathVariable Long actorId, @RequestParam Long voitureId) {
+	    Optional<Actor> optionalActor = actorRepository.findById(actorId);
+	    Optional<Voiture> optionalVoiture = voitureRepository.findById(voitureId);
+	    
+	    if (optionalActor.isEmpty() || optionalVoiture.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Actor ou Voiture non trouvée.");
+        }
+
+	    if (optionalActor.isEmpty() || optionalVoiture.isEmpty()) {
+	        return ResponseEntity.notFound().build();
+	    }
+
+	    Actor actor = optionalActor.get();
+	    Voiture voiture = optionalVoiture.get();
+	    if (!Objects.equals(voiture.getConducteurActor().getId(), actorId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cette voiture ne vous appartient pas.");
+        }
+
+        Role conducteurRole = roleRepository.findByName("ROLE_CONDUCTEUR");
+        if (conducteurRole != null) {
+            actor.getRoles().add(conducteurRole);
+        }
+
+        actorRepository.save(actor);
+        return ResponseEntity.ok("L'acteur est maintenant conducteur.");
+    }
+	    
+	    
 	//soft Delete
 	@PutMapping("/delete/{id}")
 	public ResponseEntity<Actor> softDeleteActor(@PathVariable Long id){

@@ -57,6 +57,10 @@ public class Actor {
 	
 	private boolean active=true;
 	
+	@OneToMany(mappedBy = "conducteur", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Voiture> voitures;
+
+	
 	@OneToMany(mappedBy = "actor", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Avis> avis;
 
@@ -88,7 +92,6 @@ public class Actor {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
 
 

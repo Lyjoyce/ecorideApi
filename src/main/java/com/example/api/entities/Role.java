@@ -1,6 +1,5 @@
 package com.example.api.entities;
 
-import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -9,10 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Entity
@@ -31,9 +29,6 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private Set<Actor> actors;
     
-    @OneToMany(mappedBy = "role")
-    private List<Voiture> voitures;
-
 
     public Role(String name) {
         this.name = name;

@@ -38,7 +38,5 @@ public class Carpooling {
 	private int prix;
 	private int nbPlaceDisponible;
 	@OneToMany(mappedBy="carpooling")
-	private List<Seatdispo> seatdispo;
-	
-	
+	private List<Seatdispo> seatdispo;	
 }
