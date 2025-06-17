@@ -1,4 +1,4 @@
-package com.example.api.web;
+package com.example.api.controllers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api.dto.LoginRequest;
 import com.example.api.entities.Actor;
-import com.example.api.entities.Avis;
 import com.example.api.repositories.ActorRepository;
 import com.example.api.repositories.AvisRepository;
 import com.example.api.security.JwtUtil;
@@ -31,7 +30,7 @@ import com.example.api.services.ActorServiceImplementation;
 @CrossOrigin(origins = "*") // ou "http://127.0.0.1:3000"
 
 
-public class ActorController {
+public class ActorControllers {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	@Autowired
