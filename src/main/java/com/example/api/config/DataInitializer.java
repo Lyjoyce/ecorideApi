@@ -21,7 +21,6 @@ public class DataInitializer {
     public void init() {
         List<String> defaultRoles = Arrays.asList(
             "ROLE_ACTOR",
-            "ROLE_VISITOR",
             "ROLE_PASSAGER",
             "ROLE_CONDUCTEUR",
             "ROLE_EMPLOYE",
@@ -30,7 +29,9 @@ public class DataInitializer {
 
         for (String roleName : defaultRoles) {
             if (!roleRepository.existsByName(roleName)) {
-                roleRepository.save(new Role(roleName));
+                Role role = new Role();
+                role.setName(roleName);
+                roleRepository.save(role);
                 System.out.println("Inserted role: " + roleName);
             }
         }

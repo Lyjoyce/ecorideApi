@@ -1,170 +1,117 @@
 package com.example.api.controllers;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.api.dto.LoginRequest;
 import com.example.api.entities.Actor;
 import com.example.api.entities.Role;
 import com.example.api.entities.Voiture;
 import com.example.api.repositories.ActorRepository;
-import com.example.api.repositories.AvisRepository;
-import com.example.api.security.JwtUtil;
-import com.example.api.services.ActorServiceImplementation;
-
-import java.util.Objects; // ✅ Correct
-
+import com.example.api.repositories.RoleRepository;
+import com.example.api.repositories.VoitureRepository;
 
 @RestController
-@RequestMapping("/api/v1/actor")
-@CrossOrigin(origins = "*") // ou "http://127.0.0.1:3000"
-
-
+@RequestMapping("/api/v1/actors")
+@CrossOrigin(origins = "*")
 public class ActorControllers {
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	@Autowired
-	private ActorRepository actorRepository;
-	@Autowired
-	private ActorServiceImplementation actorServiceImplementation;
-	@Autowired 
-	private AvisRepository avisRepository; // TODO: utiliser pour gérer les avis
-	@Autowired
-	private com.example.api.repositories.VoitureRepository voitureRepository;
-	@Autowired
-	private com.example.api.repositories.RoleRepository roleRepository;
 
+    @Autowired
+    private ActorRepository actorRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
 
-	@GetMapping("/test")
-public String testCallActor() {
-	return "ActorController ok";
-}
-	@PostMapping("/addNewActor")
-	public ResponseEntity <?>createActor(@RequestBody Actor actor) {
-		String hashedPassword = passwordEncoder.encode(actor.getPassword());
-	    actor.setPassword(hashedPassword);
-		try {
-		Actor savedActor = actorServiceImplementation.createActor(actor);
-		return ResponseEntity.ok(savedActor);
-		
-		 }catch(IllegalArgumentException e) {
-			 return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());}
-		 }
-	
-	@Autowired
-	private JwtUtil jwtUtil;
+    @Autowired
+    private VoitureRepository voitureRepository;
 
-	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-	    Optional<Actor> optionalActor = actorRepository.findByEmail(request.getEmail());
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	    if (optionalActor.isPresent()) {
-	        Actor actor = optionalActor.get();
+    // Test simple
+    @GetMapping("/test")
+    public String testCallActor() {
+        return "ActorController ok";
+    }
 
-	        if (passwordEncoder.matches(request.getPassword(), actor.getPassword())) {
-	            String token = jwtUtil.generateToken(actor.getEmail());
+    // Récupérer tous les acteurs
+    @GetMapping
+    public List<Actor> getAllActors() {
+        return actorRepository.findAll();
+    }
 
-	            
-	            Map<String, Object> response = new HashMap<>();
-	            response.put("token", token);
-	            response.put("id", actor.getId());
-	            response.put("firstname", actor.getFirstname());
-	            response.put("lastname", actor.getLastname());
-	            response.put("email", actor.getEmail());
+    // Récupérer tous les acteurs actifs
+    @GetMapping("/active")
+    public List<Actor> getAllActiveActors() {
+        return actorRepository.findByActiveTrue();
+    }
 
-	            return ResponseEntity.ok(response);
-	        }
-	    }
+    // Récupérer un acteur par id
+    @GetMapping("/{id}")
+    public ResponseEntity<Actor> getActorById(@PathVariable Long id) {
+        return actorRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
-	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	                         .body("Email ou mot de passe incorrect");
-	}
+    // Mettre à jour un acteur (exemple sur lastname, à étendre selon besoin)
+    @PutMapping("/{id}")
+    public ResponseEntity<Actor> updateActor(@PathVariable Long id, @RequestBody Actor actorDetails) {
+        return actorRepository.findById(id)
+                .map(actor -> {
+                    actor.setLastname(actorDetails.getLastname());
+                    // TODO: mettre à jour d'autres champs si nécessaire
+                    return ResponseEntity.ok(actorRepository.save(actor));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 
+    // Devenir conducteur avec validation voiture
+    @PutMapping("/{id}/become-driver")
+    public ResponseEntity<?> becomeDriver(@PathVariable Long id, @RequestParam Long voitureId) {
+        Optional<Actor> optionalActor = actorRepository.findById(id);
+        Optional<Voiture> optionalVoiture = voitureRepository.findById(voitureId);
 
-	
-	@GetMapping("/findAll")
-	public List<Actor> getAllActors(){
-		return actorRepository.findAll();
-	}
-	@GetMapping("/findAllActif")
-	public List<Actor> getAllActiveActors(){
-		return actorRepository.findByActiveTrue();
-	}
-
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<Actor> getActorById(@PathVariable Long id){
-		return actorRepository.findById(id)
-				.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
-	}
-	
-	@PutMapping("/{id}")
-	public ResponseEntity<Actor> updateActor(@PathVariable Long id, @RequestBody Actor actorDetails){
-		return actorRepository.findById(id)
-				.map(actor->{
-					actor.setLastname(actorDetails.getLastname());
-					return ResponseEntity.ok(actorRepository.save(actor));
-				})
-				.orElse(ResponseEntity.notFound().build());
-	}
-	
-	@PutMapping("/becomeDriver/{actorId}")
-	public ResponseEntity<?> becomeDriver(@PathVariable Long actorId, @RequestParam Long voitureId) {
-	    Optional<Actor> optionalActor = actorRepository.findById(actorId);
-	    Optional<Voiture> optionalVoiture = voitureRepository.findById(voitureId);
-	    
-	    if (optionalActor.isEmpty() || optionalVoiture.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Actor ou Voiture non trouvée.");
+        if (optionalActor.isEmpty() || optionalVoiture.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Acteur ou voiture non trouvé(e).");
         }
 
-	    if (optionalActor.isEmpty() || optionalVoiture.isEmpty()) {
-	        return ResponseEntity.notFound().build();
-	    }
+        Actor actor = optionalActor.get();
+        Voiture voiture = optionalVoiture.get();
 
-	    Actor actor = optionalActor.get();
-	    Voiture voiture = optionalVoiture.get();
-	    if (!Objects.equals(voiture.getConducteurActor().getId(), actorId)) {
+        // Vérifie que la voiture appartient bien à cet acteur
+        if (voiture.getConducteurActor() == null || !Objects.equals(voiture.getConducteurActor().getId(), id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cette voiture ne vous appartient pas.");
         }
 
-        Role conducteurRole = roleRepository.findByName("ROLE_CONDUCTEUR");
-        if (conducteurRole != null) {
-            actor.getRoles().add(conducteurRole);
+        Optional<Role> conducteurRole = roleRepository.findByName("ROLE_CONDUCTEUR");
+        if (conducteurRole.isPresent()) {
+            actor.getRoles().add(conducteurRole.get());
+            actorRepository.save(actor);
+            return ResponseEntity.ok("L'acteur est maintenant conducteur.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Rôle conducteur non trouvé.");
         }
-
-        actorRepository.save(actor);
-        return ResponseEntity.ok("L'acteur est maintenant conducteur.");
     }
-	    
-	    
-	//soft Delete
-	@PutMapping("/delete/{id}")
-	public ResponseEntity<Actor> softDeleteActor(@PathVariable Long id){
-		return actorRepository.findById(id)
-				.map(actor->{
-					actor.setActive(false);
-					return ResponseEntity.ok(actorRepository.save(actor));
-				})
-				.orElse(ResponseEntity.notFound().build());
-	}
-	
-}
 
+    // Soft delete (désactivation) d'un acteur
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<Actor> softDeleteActor(@PathVariable Long id) {
+        return actorRepository.findById(id)
+                .map(actor -> {
+                    actor.setActive(false);
+                    return ResponseEntity.ok(actorRepository.save(actor));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+}

@@ -19,6 +19,46 @@ public class VoitureRequest {
     private String energy;
     private List<String> options;
     private boolean ecologique;
-
+    private int SeatAvailable;
+    
     private String roleName;
+    
+    
+    public Long getConducteurId() { return conducteurId; }
+    public String getImmatriculation() { return immatriculation; }
+    public LocalDate getDate1ereimmatriculation() { return date1ereimmatriculation; }
+    public String getMarque() { return marque; }
+    public String getModele() { return modele; }
+    public String getCouleur() { return couleur; }
+    public String getEnergy() { return energy; }
+    public List<String> getOptions() { return options; }
+    public boolean isEcologique() { return ecologique; }
+
+	
+
+
+
+
+public void setMarque(String marque) {
+    this.marque = marque;
+}
+
+
+
+public void setModele(String modele) {
+    this.modele = modele;
+}
+
+public int getSeatAvailable() {
+    return SeatAvailable;
+}
+
+public void setSeatAvailable(int SeatAvailables) {
+    this.SeatAvailable = SeatAvailables;
+}
+
+
+public void setEcologique(boolean ecologique) {
+    this.ecologique = ecologique;
+}
 }

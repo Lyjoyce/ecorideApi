@@ -34,7 +34,7 @@ public class Voiture {
 	private boolean ecologique;
 	
 	 @ManyToOne
-	    @JoinColumn(name = "conducteur_id") // L'acteur propriétaire de cette voiture
+	    @JoinColumn(name = "conducteur_id") // L'actor propriétaire de cette voiture
 	    private Actor conducteur;
 
 	public void setConducteurActor(Actor conducteur2) {
@@ -46,4 +46,15 @@ public class Voiture {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public void setMarque(String marque) { this.marque = marque; }
+	public void setModele(String modele) { this.modele = modele; }
+	public void setEcologique(boolean ecologique) { this.ecologique = ecologique; }
+	
+	public void setImmatriculation(String immatriculation) { this.immatriculation = immatriculation; }
+	public void setDate1ereimmatriculation(LocalDate date) { this.date1ereimmatriculation = date; }
+	public void setCouleur(String couleur) { this.couleur = couleur; }
+	public void setEnergy(String energy) { this.energy = energy; }
+	public void setOptions(List<String> options) { this.options = options; }
+
 }

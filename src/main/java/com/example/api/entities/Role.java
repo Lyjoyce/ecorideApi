@@ -4,6 +4,7 @@ import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,12 +12,14 @@ import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = "actors")
+
 public class Role {
 
     @Id
@@ -24,12 +27,12 @@ public class Role {
     private Long id;
     
     @Column(unique = true, nullable = false)
-    private String name; //  : "ROLE_PASSAGER", "ROLE_CONDUCTEUR", "ROLE_EMPLOYE"
+    private String name; //  : "ROLE_ACTOR", "ROLE_PASSAGER", "ROLE_CONDUCTEUR", "ROLE_EMPLOYE", "ROLE_ADMIN"
     
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<Actor> actors;
-    
 
+   
     public Role(String name) {
         this.name = name;
     }

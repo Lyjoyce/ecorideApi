@@ -1,55 +1,56 @@
+
 package com.example.api.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+
 @Entity
 public class Avis {
-	
-	@Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int note;
-    private String avis;
-    private boolean valide = false; // par défaut, non validé
 
     @ManyToOne
-    @JoinColumn(name = "actor_id")
-    private Actor actor;
+    @JoinColumn(name = "passager_id", nullable = false)
+    private Actor passager;
 
-	public void setNote(int note2) {
-		// TODO Auto-generated method stub
-		
-	}
+    @ManyToOne
+    @JoinColumn(name = "conducteur_id", nullable = false)
+    private Actor conducteur;
 
-	public void setAvis(String avis2) {
-		// TODO Auto-generated method stub
-		
-	}
+    private int note;
 
-	public void setActor(Actor actor2) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Column(length = 1000)
+    private String avis;
 
-	public void setValide(boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public Actor getActor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int getNote() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    private boolean valide = false;
     
+    @ManyToOne
+    @JoinColumn(name = "carpooling_id")
+    private Carpooling carpooling;
+ 
+    @ManyToOne
+    @JoinColumn(name = "employe_id")
+    private Actor employe;
 
+    
+    public Long getId() { return id; }
+    public Actor getPassager() { return passager; }
+    public void setPassager(Actor passager) { this.passager = passager; }
+
+    public Actor getConducteur() { return conducteur; }
+    public void setConducteur(Actor conducteur) { this.conducteur = conducteur; }
+
+    public int getNote() { return note; }
+    public void setNote(int note) { this.note = note; }
+
+    public String getAvis() { return avis; }
+    public void setAvis(String avis) { this.avis = avis; }
+
+    public boolean isValide() { return valide; }
+    public void setValide(boolean valide) { this.valide = valide; }
+
+    public Actor getEmploye() { return employe; }
+    public void setEmploye(Actor employe) { this.employe = employe; }
 }

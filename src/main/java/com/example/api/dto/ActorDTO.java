@@ -2,6 +2,7 @@ package com.example.api.dto;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.example.api.entities.Actor;
@@ -19,6 +20,7 @@ public class ActorDTO {
     private String firstname;
     private String lastname;
     private String email;
+    private Set<String> roleNames;
     private String telephone;
     private LocalDate birthday;
     private int note;
@@ -30,13 +32,12 @@ public class ActorDTO {
     private boolean ecologique;
     private boolean animal;
     private boolean nosmoke;
-    private boolean seatone;
-    private boolean seattwo;
-    private boolean seatthree;
-    private int nbplace;
     private int credits;
     private boolean isActive;
-    private List<SeatdispoDTO> seatdispo; 
+    private List<SeatAvailableDTO> seatReservations;
+	private Object seatAvailable;
+
+	 
 
     public ActorDTO(Actor actor) {
         this.id = actor.getId();
@@ -46,7 +47,7 @@ public class ActorDTO {
         this.telephone = actor.getTelephone();
         this.birthday = actor.getBirthday();
         this.note = actor.getNote();
-        this.avis = actor.getAvis();
+        this.avis = actor.getAvisEcrits();
         this.immatriculation = actor.getImmatriculation();
         this.date1ereimmatriculation = actor.getDate1ereimmatriculation();
         this.marque = actor.getMarque();
@@ -54,15 +55,37 @@ public class ActorDTO {
         this.ecologique = actor.isEcologique();
         this.animal = actor.isAnimal();
         this.nosmoke = actor.isNosmoke();
-        this.seatone = actor.isSeatone();
-        this.seattwo = actor.isSeattwo();
-        this.seatthree = actor.isSeatthree();
-        this.nbplace = actor.getNbPlaceDisponible();
         this.credits = actor.getCredits();
         this.isActive = actor.isActive();  
-        this.seatdispo = actor.getSeatdispo().stream()
-                .map(SeatdispoDTO::new)
+        this.seatAvailable = actor.getSeatReservations().stream()
+                .map(SeatAvailableDTO::new)
                 .collect(Collectors.toList());
         }
+
+
+
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Set<String> getRoleNames() {
+        return roleNames;
+    }
+
+    public void setRoleNames(Set<String> roleNames) {
+        this.roleNames = roleNames;
+    }
+
+
+
+	public void setPassword(String encodedPassword) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	
     }
 

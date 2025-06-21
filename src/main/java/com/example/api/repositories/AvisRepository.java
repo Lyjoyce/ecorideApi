@@ -9,6 +9,8 @@ import com.example.api.entities.Avis;
 
 public interface AvisRepository extends JpaRepository<Avis, Long> {
     List<Avis> findByValideFalse(); // pour que l'employé valide
-    List<Avis> findByActorAndValideTrue(Actor actor);
+    List<Avis> findByPassagerAndValideTrue(Actor passager);
+    List<Avis> findByConducteurAndValideTrue(Actor conducteur);
+
 }
 
