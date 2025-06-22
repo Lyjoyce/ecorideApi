@@ -83,9 +83,5 @@ public class ActorDTO {
 		// TODO Auto-generated method stub
 		
 	}
-
-
-
-	
     }
 

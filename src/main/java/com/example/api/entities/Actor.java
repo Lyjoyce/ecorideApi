@@ -6,18 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -28,7 +17,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Actor {
 
     @Id 
@@ -40,6 +28,9 @@ public class Actor {
     private String email;
     private String password;
     private String telephone;
+
+    private LocalDate birthday; 
+    private int note = 0;       
 
     @Lob
     @Column(name = "photo")
@@ -61,11 +52,11 @@ public class Actor {
 
     private int credits = 0;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private boolean active = true;
 
     @OneToMany(mappedBy = "conducteur", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Voiture> voitures;
+    private List<Voiture> voitures = new ArrayList<>();
 
     @OneToMany(mappedBy = "passager", cascade = CascadeType.ALL)
     private List<Avis> avisEcrits = new ArrayList<>();
@@ -87,24 +78,10 @@ public class Actor {
     )
     private Set<Role> roles = new HashSet<>();
 
-	
-
-    public void setNote(int round) {}
-
-    public int getNote() {
-        return 0;
-    }
-
-    public LocalDate getBirthday() {
-        return null;
-    }
-    
     public String getPrimaryRoleName() {
         return roles.stream()
                 .findFirst()
                 .map(Role::getName)
                 .orElse("UNKNOWN");
     }
-
 }
- 

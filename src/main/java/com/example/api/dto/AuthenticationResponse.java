@@ -7,7 +7,11 @@ public class AuthenticationResponse {
         this.token = token;
     }
 
-    public String getToken() {
+    public AuthenticationResponse(String jwtToken, ActorLoginResponse response) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getToken() {
         return token;
     }
 
@@ -15,4 +19,6 @@ public class AuthenticationResponse {
         this.token = token;
     }
 }
+
+
 

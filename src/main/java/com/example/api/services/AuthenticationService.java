@@ -12,19 +12,23 @@ import com.example.api.entities.Actor;
 import com.example.api.entities.Role;
 import com.example.api.repositories.ActorRepository;
 import com.example.api.repositories.RoleRepository;
+import com.example.api.security.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
 
+
+public class AuthenticationService {
+	
     private final ActorRepository actorRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final JwtUtil jwtUtil;
 
     public AuthenticationResponse register(RegisterRequest request) {
+    	System.out.println("Tentative d'enregistrement pour : " + request.getEmail());
 
         if (actorRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email déjà utilisé");
@@ -41,16 +45,25 @@ public class AuthenticationService {
         actor.setLastname(request.getLastname());
         actor.setEmail(request.getEmail());
         actor.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        // Ajoute le rôle dans le Set<Role>
+        actor.setCredits(20); 
+        actor.setActive(true);
+        
+        actor.setSeatAvailable(request.getSeatAvailable());
+        actor.setTelephone(request.getTelephone());
+        
         Set<Role> roles = new HashSet<>();
         roles.add(userRole);
         actor.setRoles(roles);
-
-        actorRepository.save(actor);
-
-        String jwtToken = jwtService.generateToken(actor);
-        return new AuthenticationResponse(jwtToken);
+        
+        System.out.println("Sauvegarde de l'acteur : " + actor.getEmail());
+        actorRepository.save(actor);     
+        String jwtToken = jwtUtil.generateToken(actor.getEmail());
+        
+        System.out.println("Token généré avec succès");
+        return new AuthenticationResponse(jwtToken);         
     }
-
+    
+    public String generateToken(Actor actor) {
+        return jwtUtil.generateToken(actor.getEmail());
+    }	
 }
