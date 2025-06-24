@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -30,8 +31,8 @@ public class Actor {
     private String telephone;
 
     private LocalDate birthday; 
-    private int note = 0;       
-
+    private int note = 0;
+    
     @Lob
     @Column(name = "photo")
     private byte[] photo;
@@ -44,12 +45,19 @@ public class Actor {
     private boolean ecologique;
     private boolean animal;
     private boolean nosmoke;
+    
+    public List<Avis> getAvisRecusValidés() {
+        return avisRecus.stream()
+            .filter(Avis::isValide)
+            .collect(Collectors.toList());
+    }
 
+    
+   
     @Min(1)
     @Max(4)
     @Column(nullable = false)
-    private int seatAvailable;
-
+    private Integer seatAvailable = 1; // valeur par défaut
     private int credits = 0;
 
     @Column(nullable = false)
@@ -84,4 +92,9 @@ public class Actor {
                 .map(Role::getName)
                 .orElse("UNKNOWN");
     }
+    @OneToMany(mappedBy = "conducteur", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Carpooling> trajetsProposes = new ArrayList<>();
+    
+    @Column(length = 1000)
+    private String refreshToken;
 }

@@ -37,5 +37,12 @@ public class SeatAvailable {
     @ManyToOne
     @JoinColumn(name = "carpooling_id", nullable = false)
     private Carpooling carpooling;
-
+    
+    private String status; // Exemple: "EN_ATTENTE", "VALIDÉ", "ANNULÉ"
+    private boolean isValidated ;
+    
+    private boolean confirmed;
+    public boolean isConfirmed() {
+        return confirmed;
+    }
 }

@@ -1,67 +1,36 @@
+
 package com.example.api.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+@Data
 public class RegisterRequest {
+
+    @NotBlank(message = "Le prénom est requis")
     private String firstname;
+
+    @NotBlank(message = "Le nom est requis")
     private String lastname;
+
+    @NotBlank(message = "L'email est requis")
+    @Email(message = "Format d'email invalide")
     private String email;
+
+    @NotBlank(message = "Le mot de passe est requis")
     private String password;
-    private String role;
-    private int seatAvailable;
+
+    @NotBlank(message = "Le numéro de téléphone est requis")
     private String telephone;
 
-    public String getFirstname() {
-        return firstname;
-    }
+    private String role; // Peut être null pour défaut à ROLE_PASSAGER
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public int getSeatAvailable() {
-        return seatAvailable;
-    }
-
-    public void setSeatAvailable(int seatAvailable) {
-        this.seatAvailable = seatAvailable;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
+    @NotNull(message = "Le nombre de places disponibles est requis")
+    @Min(value = 1, message = "Minimum 1 place disponible")
+    @Max(value = 4, message = "Maximum 4 places disponibles")
+    private Integer seatAvailable;
 }

@@ -26,7 +26,7 @@ import com.example.api.repositories.VoitureRepository;
 
 @RestController
 @RequestMapping("/api/v1/actors")
-@CrossOrigin(origins = "*")
+
 public class ActorControllers {
 
     @Autowired
@@ -53,21 +53,23 @@ public class ActorControllers {
         return actorRepository.findAll();
     }
 
-    // Récupérer tous les acteurs actifs
+    // Récupérer tous les actors actifs
     @GetMapping("/active")
     public List<Actor> getAllActiveActors() {
         return actorRepository.findByActiveTrue();
     }
 
-    // Récupérer un acteur par id
+    // Récupérer un actor par id
     @GetMapping("/{id}")
     public ResponseEntity<Actor> getActorById(@PathVariable Long id) {
         return actorRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    // @GetMapping("/{id}/carpoolings") → pour afficher les trajets proposés par cet acteur.
+    // @GetMapping("/{id}/reservations") → pour ses trajets réservés.
 
-    // Mettre à jour un acteur (exemple sur lastname, à étendre selon besoin)
+    // Mettre à jour un actor (exemple sur lastname, à étendre selon besoin)
     @PutMapping("/{id}")
     public ResponseEntity<Actor> updateActor(@PathVariable Long id, @RequestBody Actor actorDetails) {
         return actorRepository.findById(id)

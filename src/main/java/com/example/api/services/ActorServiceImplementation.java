@@ -75,7 +75,7 @@ public class ActorServiceImplementation implements ActorService {
 
     @Override
     public Actor getActorByEmail(String email) {
-        return actorRepository.findByEmail(email)
+    	return actorRepository.findByEmailWithRoles(email)
             .orElseThrow(() -> new IllegalArgumentException("Aucun utilisateur trouvé avec cet email"));
     }
 

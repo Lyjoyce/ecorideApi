@@ -28,6 +28,8 @@ public class Voiture {
 	private String modele;
 	private String couleur;
 	private String energy;
+	private int nbPlacesDisponibles;
+
 	
 	@ElementCollection
 	private List<String> options;
@@ -36,6 +38,7 @@ public class Voiture {
 	 @ManyToOne
 	    @JoinColumn(name = "conducteur_id") // L'actor propriétaire de cette voiture
 	    private Actor conducteur;
+	
 
 	public void setConducteurActor(Actor conducteur2) {
 		// TODO Auto-generated method stub
@@ -56,5 +59,9 @@ public class Voiture {
 	public void setCouleur(String couleur) { this.couleur = couleur; }
 	public void setEnergy(String energy) { this.energy = energy; }
 	public void setOptions(List<String> options) { this.options = options; }
+
+	public int getNbPlacesDisponible() {
+		return nbPlacesDisponibles;
+	}
 
 }

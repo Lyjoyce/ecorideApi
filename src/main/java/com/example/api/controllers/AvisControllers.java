@@ -1,6 +1,7 @@
 package com.example.api.controllers;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,12 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api.entities.Actor;
 import com.example.api.entities.Avis;
+import com.example.api.entities.Carpooling;
 import com.example.api.repositories.ActorRepository;
 import com.example.api.repositories.AvisRepository;
+import com.example.api.repositories.CarpoolingRepository;
+import com.example.api.repositories.SeatAvailableRepository;
 
 @RestController
 @RequestMapping("/api/v1/avis")
-@CrossOrigin(origins = "*")
+
 public class AvisControllers {
 
     @Autowired
@@ -28,32 +32,49 @@ public class AvisControllers {
 
     @Autowired
     private ActorRepository actorRepository;
+    
+    @Autowired
+    private CarpoolingRepository carpoolingRepository;
+
+    @Autowired
+    private SeatAvailableRepository seatAvailableRepository;
 
     // 🔸 Passager laisse un avis sur un conducteur (non validé)
-    @PostMapping("/passager/{passagerId}/conducteur/{conducteurId}")
-    public ResponseEntity<Avis> laisserAvis(
+    @PostMapping("/passager/{passagerId}/carpooling/{carpoolingId}/conducteur/{conducteurId}")
+    public ResponseEntity<?> laisserAvis(
             @PathVariable Long passagerId,
+            @PathVariable Long carpoolingId,
             @PathVariable Long conducteurId,
             @RequestBody AvisRequest avisRequest) {
 
         Actor passager = actorRepository.findById(passagerId).orElse(null);
         Actor conducteur = actorRepository.findById(conducteurId).orElse(null);
+        Carpooling carpooling = carpoolingRepository.findById(carpoolingId).orElse(null);
 
-        if (passager == null || conducteur == null) {
-            return ResponseEntity.notFound().build();
+        if (passager == null || conducteur == null || carpooling == null) {
+            return ResponseEntity.badRequest().body("Passager, conducteur ou trajet introuvable.");
         }
 
+        // 🔍 Vérifie que le passager a une réservation confirmée sur ce trajet
+        boolean aReserve = carpooling.getReservations().stream()
+            .anyMatch(resa -> resa.getPassager().getId().equals(passagerId) && resa.isConfirmed());
+
+        if (!aReserve) {
+            return ResponseEntity.status(403).body("Seuls les passagers ayant réservé peuvent laisser un avis.");
+        }
+
+        // Création de l'avis
         Avis avis = new Avis();
-        avis.setNote(avisRequest.getNote());
         avis.setAvis(avisRequest.getAvis());
         avis.setPassager(passager);
         avis.setConducteur(conducteur);
+        avis.setCarpooling(carpooling);
         avis.setValide(false);
 
         Avis savedAvis = avisRepository.save(avis);
         return ResponseEntity.ok(savedAvis);
     }
-
+   
     // 🔸 Employé valide un avis
     @PutMapping("/{avisId}/valider")
     public ResponseEntity<Avis> validerAvis(
@@ -71,19 +92,6 @@ public class AvisControllers {
         avis.setEmploye(employe);
         avisRepository.save(avis);
 
-        // Mise à jour de la note du conducteur
-        Actor conducteur = avis.getConducteur();
-        if (conducteur != null) {
-            List<Avis> avisValides = avisRepository.findByConducteurAndValideTrue(conducteur);
-            double moyenne = avisValides.stream()
-                    .mapToInt(Avis::getNote)
-                    .average()
-                    .orElse(0.0);
-
-            conducteur.setNote((int) Math.round(moyenne));
-            actorRepository.save(conducteur);
-        }
-
         return ResponseEntity.ok(avis);
     }
 
@@ -95,11 +103,8 @@ public class AvisControllers {
 
     // DTO pour réception d'avis
     public static class AvisRequest {
-        private int note;
+    	
         private String avis;
-
-        public int getNote() { return note; }
-        public void setNote(int note) { this.note = note; }
 
         public String getAvis() { return avis; }
         public void setAvis(String avis) { this.avis = avis; }

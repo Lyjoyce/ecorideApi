@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.api.entities.Actor;
+import com.example.api.entities.Voiture;
 
 public interface ActorRepository extends JpaRepository<Actor,Long> {
 	Optional<Actor> findByEmail(String email);
@@ -16,6 +17,7 @@ public interface ActorRepository extends JpaRepository<Actor,Long> {
     Optional<Actor> findByEmailWithRoles(@Param("email") String email);
     
 	List<Actor> findByActiveTrue();
+
 }
 
 

@@ -19,7 +19,7 @@ import com.example.api.services.RoleService;
 
 @RestController
 @RequestMapping("/api/v1/roles")
-@CrossOrigin(origins = "*")
+
 public class RoleController {
 
     @Autowired

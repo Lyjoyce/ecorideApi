@@ -1,9 +1,13 @@
 package com.example.api.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.api.dto.SeatAvailableRequestDTO;
+import com.example.api.dto.SeatAvailableReservationDTO;
 import com.example.api.entities.Actor;
 import com.example.api.entities.Carpooling;
 import com.example.api.entities.SeatAvailable;
@@ -23,13 +27,24 @@ public class SeatAvailableService {
 
     @Autowired
     private SeatAvailableRepository seatAvailableRepository;
+    
+    public List<Carpooling> getAllCarpoolingsWithAvailableSeats() {
+        return carpoolingRepository.findAll()
+                .stream()
+                .filter(c -> c.getSeatAvailable() > 0)
+                .collect(Collectors.toList());
+    }
 
     public SeatAvailable reserveSeat(SeatAvailableRequestDTO dto) {
         Actor passager = actorRepository.findById(dto.getPassagerId())
                 .orElseThrow(() -> new RuntimeException("Passager introuvable"));
-
+        
         Carpooling carpooling = carpoolingRepository.findById(dto.getCarpoolingId())
                 .orElseThrow(() -> new RuntimeException("Trajet introuvable"));
+        
+        if (carpooling.getSeatAvailable() < dto.getValue()) {
+            throw new IllegalStateException("Pas assez de places disponibles.");
+        }
 
         SeatAvailable seat = SeatAvailableMapper.fromDTO(dto);
         seat.setPassager(passager);
@@ -61,5 +76,34 @@ public class SeatAvailableService {
 
         return seatAvailableRepository.save(seat);
     }
+    
+    public SeatAvailableReservationDTO getReservationDetails(Long reservationId) {
+        SeatAvailable seat = seatAvailableRepository.findById(reservationId)
+            .orElseThrow(() -> new RuntimeException("Réservation introuvable"));
 
+        SeatAvailableReservationDTO dto = new SeatAvailableReservationDTO();
+        
+
+        dto.setReservationId(seat.getId());
+        dto.setCarpoolingId(seat.getCarpooling().getId());
+        dto.setFromCity(seat.getFromCity());
+        dto.setToCity(seat.getToCity());
+        dto.setDepartureDate(seat.getDepartureDate());
+        dto.setDepartureTime(seat.getDepartureTime());
+        dto.setArrivalDate(seat.getArrivalDate());
+        dto.setArrivalTime(seat.getArrivalTime());
+        dto.setValue(seat.getValue());
+
+        dto.setPassagerId(seat.getPassager().getId());
+        dto.setPassagerName(seat.getPassager().getFirstname() + " " + seat.getPassager().getLastname());
+        dto.setPassagerEmail(seat.getPassager().getEmail());
+
+        dto.setConducteurName(seat.getCarpooling().getConducteur().getFirstname() + " " + seat.getCarpooling().getConducteur().getLastname());
+        dto.setConducteurEmail(seat.getCarpooling().getConducteur().getEmail());
+
+        dto.setVoitureMarque(seat.getCarpooling().getVoiture().getMarque());
+        dto.setVoitureModele(seat.getCarpooling().getVoiture().getModele());
+
+        return dto;
+    }  
 }
