@@ -25,7 +25,7 @@ WORKDIR /app
 COPY --from=builder /app/target/ecorideApi-0.0.1-SNAPSHOT.jar app.jar
 
 # Exposer le port sur lequel tourne ton application Spring Boot
-EXPOSE 8082
+EXPOSE 8080
 
 # Commande pour lancer l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]
