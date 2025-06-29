@@ -1,25 +1,28 @@
 package com.example.api.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.api.dto.MailRequest;
 import com.example.api.services.MailService;
 
 @RestController
 @RequestMapping("/api/test-mail")
 public class MailTestController {
 
-    @Autowired
-    private MailService mailService;
+    private final MailService mailService;
 
-    @GetMapping
-    public String sendTestMail(@RequestParam String to) {
+    public MailTestController(MailService mailService) {
+        this.mailService = mailService;
+    }
+
+    @PostMapping
+    public ResponseEntity<String> sendTestMail(@RequestBody MailRequest request) {
         try {
-            mailService.sendTestEmail(to);
-            return "✅ Email envoyé avec succès à " + to;
+            mailService.sendEmail(request.getTo(), request.getSubject(), request.getMessage());
+            return ResponseEntity.ok("✅ Email envoyé à " + request.getTo());
         } catch (Exception e) {
-            return "❌ Échec de l'envoi : " + e.getMessage();
+            return ResponseEntity.status(500).body("❌ Échec : " + e.getMessage());
         }
     }
 }
-

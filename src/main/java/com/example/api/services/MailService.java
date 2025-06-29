@@ -1,6 +1,6 @@
 package com.example.api.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -8,15 +8,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class MailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
-    public void sendTestEmail(String to) {
+    @Value("${spring.mail.username}")
+    private String fromEmail;
+
+    public MailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+    public void sendEmail(String to, String subject, String messageText) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@ecoride.com"); // adresse fictive ou domaine validé
+        message.setFrom(fromEmail);
         message.setTo(to);
-        message.setSubject("✅ Test Mailjet via Spring Boot");
-        message.setText("Bonjour ! Ceci est un email de test envoyé depuis Spring Boot via Mailjet SMTP.");
+        message.setSubject(subject);
+        message.setText(messageText);
 
         mailSender.send(message);
     }
