@@ -18,21 +18,25 @@ public class CarpoolingDTO {
     private LocalDate arrivalDate;
     private LocalTime arrivalTime;
 
-    private String option;
-    private String energy; // "electrique" ou "essence"
+    private boolean energy;
+    private String preferences;
 
     private double price;
+    private Double note;
+    private int duree;
+
+    private boolean annule; // ajouté : statut annulé ou non
 
     private Long voitureId;
+    private String conducteur;
     private Long conducteurId;
 
-    private List<String> jour; // ex : ["lundi", "mercredi", "vendredi"]
-    private int duree;         // durée en minutes
-    private Double note;          // moyenne des notes des passagers
+    private List<String> jour;
 
-    private int seatAvailable; // calculé mais exposé au DTO (lecture seule)
+    private int seatAvailable; // lecture seule, calculé dans l'entité
 
-    // ------------------ GETTERS & SETTERS ------------------
+    private List<String> avis; // ajouté : messages des avis (optionnel à remplir côté service)
+
 
     public Long getId() {
         return id;
@@ -106,20 +110,20 @@ public class CarpoolingDTO {
         this.arrivalTime = arrivalTime;
     }
 
-    public String getOption() {
-        return option;
-    }
-
-    public void setOption(String option) {
-        this.option = option;
-    }
-
-    public String getEnergy() {
+    public boolean isEnergy() {
         return energy;
     }
 
-    public void setEnergy(String energy) {
+    public void setEnergy(boolean energy) {
         this.energy = energy;
+    }
+
+    public String getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(String preferences) {
+        this.preferences = preferences;
     }
 
     public double getPrice() {
@@ -128,6 +132,30 @@ public class CarpoolingDTO {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public Double getNote() {
+        return note;
+    }
+
+    public void setNote(Double note) {
+        this.note = note;
+    }
+
+    public int getDuree() {
+        return duree;
+    }
+
+    public void setDuree(int duree) {
+        this.duree = duree;
+    }
+
+    public boolean isAnnule() {
+        return annule;
+    }
+
+    public void setAnnule(boolean annule) {
+        this.annule = annule;
     }
 
     public Long getVoitureId() {
@@ -154,22 +182,6 @@ public class CarpoolingDTO {
         this.jour = jour;
     }
 
-    public int getDuree() {
-        return duree;
-    }
-
-    public void setDuree(int duree) {
-        this.duree = duree;
-    }
-    
-    public Double getNote() {
-        return note;
-    }
-
-    public void setNote(Double note) {
-        this.note = note;
-    }
-
     public int getSeatAvailable() {
         return seatAvailable;
     }
@@ -178,13 +190,24 @@ public class CarpoolingDTO {
         this.seatAvailable = seatAvailable;
     }
 
-	public void setConducteur(String string) {
-		// TODO Auto-generated method stub
-		
-	}
+    public List<String> getAvis() {
+        return avis;
+    }
 
-	public void setAvis(List<String> avisMessages) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void setAvis(List<String> avis) {
+        this.avis = avis;
+    }
+
+    public String getEnergyLabel(boolean energy) {
+        return energy ? "electrique" : "essence";
+    }
+    public String getConducteur() {
+        return conducteur;
+    }
+
+    public void setConducteur(String conducteur) {
+        this.conducteur = conducteur;
+    }
+
+
 }

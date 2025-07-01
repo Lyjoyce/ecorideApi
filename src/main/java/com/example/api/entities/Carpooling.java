@@ -23,8 +23,9 @@ public class Carpooling {
     private LocalTime departureTime;
     private LocalDate arrivalDate;
     private LocalTime arrivalTime;
-    private String option;
     private boolean energy;
+    private String preferences; // ex: "voyage écologique, autopilot"
+
 
     @JsonIgnore
     @ManyToMany
@@ -70,7 +71,6 @@ public class Carpooling {
         this.departureTime = departureTime;
         this.arrivalDate = arrivalDate;
         this.arrivalTime = arrivalTime;
-        this.option = option;
         this.energy = energy;
         this.conducteur = conducteur;
         this.price = price;
@@ -147,14 +147,6 @@ public class Carpooling {
 
     public void setArrivalTime(LocalTime arrivalTime) {
         this.arrivalTime = arrivalTime;
-    }
-
-    public String getOption() {
-        return option;
-    }
-
-    public void setOption(String option) {
-        this.option = option;
     }
 
     public boolean isEnergy() {
@@ -260,6 +252,15 @@ public class Carpooling {
 
 	public void setSeatAvailable(int nbPlacesDisponibles) {
 		this.seatAvailable = nbPlacesDisponibles;
+		
+	}
+
+	public String getPreferences() {
+		return preferences;
+	}
+
+	public void setPreferences(String preferences2) {
+		this.preferences= preferences;
 		
 	}
 

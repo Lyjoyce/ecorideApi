@@ -27,14 +27,10 @@ public class Voiture {
 	private String marque;
 	private String modele;
 	private String couleur;
-	private String energy;
+	private boolean energy;
+	private boolean ecologique;
 	private int nbPlacesDisponibles;
 
-	
-	@ElementCollection
-	private List<String> options;
-	private boolean ecologique;
-	
 	 @ManyToOne
 	    @JoinColumn(name = "conducteur_id") // L'actor propriétaire de cette voiture
 	    private Actor conducteur;
@@ -57,11 +53,9 @@ public class Voiture {
 	public void setImmatriculation(String immatriculation) { this.immatriculation = immatriculation; }
 	public void setDate1ereimmatriculation(LocalDate date) { this.date1ereimmatriculation = date; }
 	public void setCouleur(String couleur) { this.couleur = couleur; }
-	public void setEnergy(String energy) { this.energy = energy; }
-	public void setOptions(List<String> options) { this.options = options; }
+	public void setEnergy(boolean energy) { this.energy = energy; }
 
 	public int getNbPlacesDisponible() {
 		return nbPlacesDisponibles;
 	}
-
 }

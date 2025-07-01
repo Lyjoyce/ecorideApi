@@ -40,7 +40,6 @@ public class VoitureControllers {
         voiture.setModele(request.getModele());
         voiture.setCouleur(request.getCouleur());
         voiture.setEnergy(request.getEnergy());
-        voiture.setOptions(request.getOptions());
         voiture.setEcologique(request.isEcologique());
 
         Voiture saved = voitureRepository.save(voiture);

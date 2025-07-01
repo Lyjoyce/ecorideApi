@@ -23,7 +23,7 @@ public class CarpoolingMapper {
     @Autowired
     private ActorRepository actorRepository;
 
-    // Convertit DTO → Entity
+    // Convertit un DTO en entité
     public Carpooling toEntity(CarpoolingDTO dto) {
         Carpooling carpooling = new Carpooling();
 
@@ -38,25 +38,23 @@ public class CarpoolingMapper {
         carpooling.setArrivalTime(dto.getArrivalTime());
 
         carpooling.setPrice(dto.getPrice());
-        carpooling.setOption(dto.getOption());
-
-        carpooling.setEnergy("electrique".equalsIgnoreCase(dto.getEnergy()));
+        carpooling.setEnergy(dto.isEnergy());
         carpooling.setNote(dto.getNote());
         carpooling.setJour(dto.getJour());
 
-        // Calcul durée en minutes (gestion traversée de nuit)
+        // Calcul de la durée en minutes (gestion des traversées de minuit)
         if (dto.getDepartureTime() != null && dto.getArrivalTime() != null) {
             long duree = Duration.between(dto.getDepartureTime(), dto.getArrivalTime()).toMinutes();
             if (duree < 0) duree += 24 * 60;
             carpooling.setDuree((int) duree);
         }
 
-        // Association voiture
+        // Lien vers la voiture
         if (dto.getVoitureId() != null) {
             voitureRepository.findById(dto.getVoitureId()).ifPresent(carpooling::setVoiture);
         }
 
-        // Association conducteur
+        // Lien vers le conducteur
         if (dto.getConducteurId() != null) {
             actorRepository.findById(dto.getConducteurId()).ifPresent(carpooling::setConducteur);
         }
@@ -64,7 +62,7 @@ public class CarpoolingMapper {
         return carpooling;
     }
 
-    // Convertit Entity → DTO
+    // Convertit une entité en DTO
     public CarpoolingDTO toDto(Carpooling entity) {
         CarpoolingDTO dto = new CarpoolingDTO();
 
@@ -80,10 +78,8 @@ public class CarpoolingMapper {
         dto.setArrivalTime(entity.getArrivalTime());
 
         dto.setSeatAvailable(entity.getSeatAvailable());
-
         dto.setPrice(entity.getPrice());
-        dto.setOption(entity.getOption());
-        dto.setEnergy(entity.isEnergy() ? "electrique" : "essence");
+        dto.setEnergy(entity.isEnergy());
         dto.setDuree(entity.getDuree());
         dto.setNote(entity.getNote());
         dto.setJour(entity.getJour());
@@ -91,8 +87,9 @@ public class CarpoolingMapper {
         if (entity.getConducteur() != null) {
             Actor conducteur = entity.getConducteur();
             dto.setConducteur(conducteur.getFirstname() + " " + conducteur.getLastname());
+            dto.setConducteurId(conducteur.getId());
 
-            // Récupération des notes
+            // Avis validés uniquement
             List<Avis> avisList = conducteur.getAvisRecus().stream()
                 .filter(Avis::isValide)
                 .collect(Collectors.toList());
@@ -109,17 +106,13 @@ public class CarpoolingMapper {
                     .collect(Collectors.toList());
                 dto.setAvis(avisMessages);
             } else {
-            	dto.setNote(null); // car type Double accepte null
+                dto.setNote(null); // pas de note
                 dto.setAvis(List.of());
             }
         }
 
         if (entity.getVoiture() != null) {
             dto.setVoitureId(entity.getVoiture().getId());
-        }
-
-        if (entity.getConducteur() != null) {
-            dto.setConducteurId(entity.getConducteur().getId());
         }
 
         return dto;

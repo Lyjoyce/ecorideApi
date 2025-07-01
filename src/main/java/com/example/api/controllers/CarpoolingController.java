@@ -82,7 +82,7 @@ public class CarpoolingController {
         dto.setDepartureTime(LocalTime.of(9, 0));
         dto.setArrivalDate(LocalDate.of(2025, 5, 21));
         dto.setArrivalTime(LocalTime.of(10, 15));
-        dto.setOption("voyage ecologique");
+        dto.setPreferences("voyage ecologique");
         dto.setEnergy("electrique");
         dto.setConducteur("Julia Rock");
         dto.setSeatAvailable("3");

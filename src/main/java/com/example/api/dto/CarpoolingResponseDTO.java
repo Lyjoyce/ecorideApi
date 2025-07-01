@@ -15,7 +15,7 @@ public class CarpoolingResponseDTO {
     private LocalDate arrivalDate;
     private LocalTime arrivalTime;
 
-    private String option;
+    private String preferences;
     private String energy;
 
     private String conducteur;     // nom complet ou email

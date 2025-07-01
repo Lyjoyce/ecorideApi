@@ -70,8 +70,8 @@ public class CarpoolingService {
         carpooling.setDepartureTime(dto.getDepartureTime());
         carpooling.setArrivalDate(dto.getArrivalDate());
         carpooling.setArrivalTime(dto.getArrivalTime());
-        carpooling.setOption(dto.getOption());
-        carpooling.setEnergy("electrique".equalsIgnoreCase(dto.getEnergy()));
+        carpooling.setEnergy(dto.isEnergy());
+        carpooling.setPreferences(dto.getPreferences());
         carpooling.setPrice(dto.getPrice());
         carpooling.setVoiture(voiture);
         carpooling.setConducteur(actor);
@@ -94,7 +94,7 @@ public class CarpoolingService {
         dto.setArrivalDate(carpooling.getArrivalDate());
         dto.setArrivalTime(carpooling.getArrivalTime());
 
-        dto.setOption(carpooling.getOption());
+        dto.setPreferences(carpooling.getPreferences());
         dto.setEnergy(carpooling.isEnergy() ? "electrique" : "essence");
 
         Actor conducteur = carpooling.getConducteur();

@@ -16,8 +16,7 @@ public class VoitureRequest {
     private String marque;
     private String modele;
     private String couleur;
-    private String energy;
-    private List<String> options;
+    private boolean energy;
     private boolean ecologique;
     private int SeatAvailable;
     
@@ -30,8 +29,7 @@ public class VoitureRequest {
     public String getMarque() { return marque; }
     public String getModele() { return modele; }
     public String getCouleur() { return couleur; }
-    public String getEnergy() { return energy; }
-    public List<String> getOptions() { return options; }
+    public boolean getEnergy() { return energy; }
     public boolean isEcologique() { return ecologique; }
 
 	
