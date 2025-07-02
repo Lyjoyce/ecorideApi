@@ -15,6 +15,8 @@ public interface ActorService {
 	Actor registerNewActor(Actor actor, Set<String> roleNames);
 	Actor register(RegisterRequest request);
 	List<RoleDTO> getAllRoles();
+	
+	void suspend(Long actorId);
 }
 
 

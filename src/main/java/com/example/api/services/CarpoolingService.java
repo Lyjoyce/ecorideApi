@@ -1,6 +1,10 @@
 package com.example.api.services;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,15 +12,14 @@ import org.springframework.stereotype.Service;
 
 import com.example.api.dto.CarpoolingDTO;
 import com.example.api.dto.CarpoolingResponseDTO;
+import com.example.api.dto.ReservationRequestDTO;
+import com.example.api.dto.SeatAvailableReservationDTO;
 import com.example.api.entities.Actor;
 import com.example.api.entities.Carpooling;
 import com.example.api.entities.Voiture;
 import com.example.api.repositories.ActorRepository;
 import com.example.api.repositories.CarpoolingRepository;
 import com.example.api.repositories.VoitureRepository;
-
-import com.example.api.dto.ReservationRequestDTO;
-import com.example.api.dto.SeatAvailableReservationDTO;
 
 @Service
 public class CarpoolingService {
@@ -174,4 +177,34 @@ public class CarpoolingService {
   
         return dto;
     }
-}
+        
+        public Map<LocalDate, Long> countByDate() {
+            return carpoolingRepository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                    Carpooling::getDepartureDate, 
+                    Collectors.counting()
+                ));
+        }
+
+     // Retourne un Map <Date, Somme des crédits (prix) des trajets ce jour>
+        public Map<LocalDate, Double> creditsByDate() {
+            List<Carpooling> carpoolings = carpoolingRepository.findAll().stream()
+                .filter(c -> !c.isAnnule()) // ignore les trajets annulés
+                .collect(Collectors.toList());
+
+            return carpoolings.stream()
+                .collect(Collectors.groupingBy(
+                    Carpooling::getDepartureDate,
+                    Collectors.summingDouble(Carpooling::getPrice)
+                ));
+        }
+
+        // Somme totale des crédits (prix) de tous les trajets non annulés
+        public Double getTotalCredits() {
+            return carpoolingRepository.findAll().stream()
+                .filter(c -> !c.isAnnule())
+                .mapToDouble(Carpooling::getPrice)
+                .sum();
+        }
+    }
+

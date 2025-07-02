@@ -45,6 +45,7 @@ public class Actor {
     private boolean ecologique;
     private boolean animal;
     private boolean nosmoke;
+    private boolean suspended = false;
     
     public List<Avis> getAvisRecusValidés() {
         return avisRecus.stream()
@@ -97,4 +98,13 @@ public class Actor {
     
     @Column(length = 1000)
     private String refreshToken;
+
+	
+	public boolean isSuspended() {
+        return suspended;
+    }
+
+    public void setSuspended(boolean suspended) {
+        this.suspended = suspended;
+    }
 }

@@ -109,4 +109,12 @@ public class ActorServiceImplementation implements ActorService {
         actor.setCredits(20);
         return actorRepository.save(actor);
     }
+    
+ //suspendre un acteur en mettant un booléen
+    public void suspend(Long actorId) {
+        actorRepository.findById(actorId).ifPresent(actor -> {
+            actor.setSuspended(true); // entité Actor a un champ boolean suspended
+            actorRepository.save(actor);
+        });
+    }
 }
