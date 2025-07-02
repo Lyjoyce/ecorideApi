@@ -1,9 +1,7 @@
 package com.example.api.entities;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
